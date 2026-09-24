@@ -1,31 +1,33 @@
-Docker Day 1
-Topics practiced
-Docker images
-Docker containers
-Dockerfile
-Docker CLI
-Container lifecycle
-Docker logs
-docker exec
-docker inspect
-Flask containerization
-Port publishing
-Container debugging
-Commands practiced
-docker pull
-docker images
-docker build
-docker run
-docker ps
-docker ps -a
-docker stop
-docker start
-docker restart
-docker rm
-docker logs
-docker exec
-docker inspect
-What I built
+## Docker Day 1
+# Topics practiced
+- Docker images
+- Docker containers
+- Dockerfile
+- Docker CLI
+- Container lifecycle
+- Docker logs
+- docker exec
+- docker inspect
+- Flask containerization
+- Port publishing
+- Container debugging
+  
+# Commands practiced
+- docker pull
+- docker images
+- docker build
+- docker run
+- docker ps
+- docker ps -a
+- docker stop
+- docker start
+- docker restart
+- docker rm
+- docker logs
+- docker exec
+- docker inspect
+  
+# What I built
 
 Containerized a basic Flask application using:
 
@@ -36,7 +38,8 @@ Dockerfile
 The Flask application listens on:
 
 0.0.0.0:5000
-Debugging practice
+
+## Debugging practice
 
 ### Problem 1 — Container startup failure
 
@@ -81,7 +84,8 @@ Fix:
 [Configure Flask to listen on 0.0.0.0:5000, then rebuild and restart the container with port publishing:
 docker run -p 5000:5000 <image>]
 
-Mental models
+## Mental models
+
 Dockerfile
     ↓
 docker build
@@ -92,19 +96,20 @@ docker run
     ↓
 Container
 
-Image:
+# Image:
 
 Read-only image layers
         +
 Writable container layer
         =
 Container filesystem
-What I still need to practice
-Docker Compose
-Docker networking
-Volumes
-Health checks
-Layer caching
-Multi-stage builds
-Container security
-Registry workflow
+
+## What I still need to practice
+- Docker Compose
+- Docker networking
+- Volumes
+- Health checks
+- Layer caching
+- Multi-stage builds
+- Container security
+- Registry workflow
