@@ -1,29 +1,37 @@
-# Docker Day 2 — PostgreSQL
+# Docker Day 2 
 
 ## Topics Practiced
 
-- Running PostgreSQL with Docker
-- Using the `postgres:16-alpine` image
-- Creating and running a PostgreSQL container
-- PostgreSQL users and passwords
-- PostgreSQL database
-- PostgreSQL client and server
-- PostgreSQL port `5432`
-- Connecting to PostgreSQL using `psql`
-- Creating tables
-- Inserting records
-- Selecting records
-- Updating records
-- Deleting records
-- Docker container storage
-- Named Docker volumes
-- Data persistence
-- Docker networks
-- Container-to-container communication
 
-## PostgreSQL Container
-
-PostgreSQL was run inside a Docker container using:
-
-```bash
-docker run
+Docker
+│
+├── PostgreSQL fundamentals
+│   ├── database
+│   ├── server/client
+│   ├── table/row/column
+│   ├── users/passwords
+│   ├── port 5432
+│   └── connection URL
+│
+├── PostgreSQL in Docker
+│   ├── postgres:16-alpine
+│   ├── docker run
+│   ├── docker exec
+│   └── psql
+│
+├── PostgreSQL CRUD
+│   ├── CREATE
+│   ├── INSERT
+│   ├── SELECT
+│   ├── UPDATE
+│   └── DELETE
+│
+├── Persistence
+│   ├── container storage
+│   ├── named volume
+│   └── data survives container deletion
+│
+└── Container networking
+    ├── Docker network
+    ├── localhost mistake
+    └── container-to-container connection
