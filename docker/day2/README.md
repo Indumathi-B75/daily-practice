@@ -2,7 +2,7 @@
 
 ## Topics Practiced
 
-
+```text
 Docker
 │
 ├── PostgreSQL fundamentals
