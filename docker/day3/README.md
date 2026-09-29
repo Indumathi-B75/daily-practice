@@ -1,7 +1,7 @@
 # Docker Day 3
 
 ## Topics Practiced
-
+```text
 Docker
 │
 ├── Flask → PostgreSQL
