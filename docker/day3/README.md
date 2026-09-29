@@ -2,7 +2,6 @@
 
 ## Topics Practiced
 
-```text
 Docker
 │
 ├── Flask → PostgreSQL
@@ -40,7 +39,6 @@ Docker
 
 ##Architecture
 
-```text
 Host
  │
  │ localhost:5000
@@ -55,7 +53,9 @@ PostgreSQL Container
  ↓
 Name Volume
 
+
 ##Compose Concepts Practiced
+
 compose.yaml
     ↓
 services
@@ -63,6 +63,7 @@ services
     └── db
          ↓
       postgres:16-alpine
+
 
 #Practiced:
 Docker Compose services
@@ -76,6 +77,7 @@ pg_isready
 depends_on
 condition: service_healthy
 
+
 ##Commands Practiced
 docker compose config
 docker compose up
@@ -86,8 +88,9 @@ docker compose down
 docker compose down -v
 docker compose exec
 
+
 ##Key Learning
-```text
+
 Docker run
     ↓
 Individual containers
