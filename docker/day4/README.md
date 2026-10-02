@@ -1,4 +1,4 @@
-# Docker Day 4 — Layer Caching
+# Docker Day 4 — Image Optimization
 
 ## Topics Practiced
 
@@ -33,27 +33,40 @@ Docker
 │   ├── --no-cache
 │   └── forced layer rebuild
 │
-└── Docker Image Inspection
-    ├── docker image history
-    └── layer sizes
+├── Docker Image Inspection
+│   ├── docker image history
+│   └── layer sizes
+│
+└── Multi-Stage Builds
+    ├── build stage
+    ├── final stage
+    ├── COPY --from
+    └── smaller final image
 ```
 
-## Cache Experiment
+## 1. Image Layers
 
-### Initial Build
-
-Docker reused existing layers:
+Dockerfile instructions create image layers.
 
 ```text
-WORKDIR /app
-COPY requirements.txt .
-RUN pip install
-COPY app.py .
+Dockerfile
+    ↓
+Instructions
+    ↓
+Image Layers
 ```
 
-### Experiment 1 — Change app.py
+Practiced inspecting image layers with:
 
-Only the application layer was invalidated.
+```bash
+docker image history <image>
+```
+
+## 2. Build Cache
+
+Docker reuses unchanged layers during subsequent builds.
+
+### Experiment 1 — Change app.py
 
 ```text
 WORKDIR /app              → CACHED
@@ -62,11 +75,9 @@ RUN pip install           → CACHED
 COPY app.py               → REBUILT
 ```
 
-This demonstrated that changing application code does not require reinstalling unchanged dependencies.
+Changing only application code did not require reinstalling unchanged dependencies.
 
 ### Experiment 2 — Change requirements.txt
-
-Changing the dependency file invalidated the dependency installation layer.
 
 ```text
 COPY requirements.txt     → REBUILT
@@ -74,11 +85,23 @@ RUN pip install           → REBUILT
 COPY app.py               → REBUILT
 ```
 
-This demonstrated why Dockerfile instruction order matters.
+Changing dependencies invalidated the dependency installation layer.
 
-## .dockerignore
+## 3. Dockerfile Instruction Order
 
-Practiced excluding unnecessary files from the Docker build context:
+Practiced placing dependency installation before application source code:
+
+```dockerfile
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+COPY app.py .
+```
+
+This allows Docker to reuse the dependency layer when only application code changes.
+
+## 4. .dockerignore
+
+Practiced excluding unnecessary files:
 
 ```text
 __pycache__/
@@ -87,9 +110,9 @@ venv/
 secret.txt
 ```
 
-This keeps the build context smaller and prevents unnecessary files from being sent to the Docker builder.
+This reduces the Docker build context and prevents unnecessary files from being sent to the builder.
 
-## No-Cache Build
+## 5. No-Cache Build
 
 Practiced:
 
@@ -97,9 +120,9 @@ Practiced:
 docker build --no-cache -t cache-test .
 ```
 
-`--no-cache` forces Docker to rebuild the applicable image layers instead of reusing the existing build cache.
+`--no-cache` forces Docker to rebuild layers instead of reusing the existing build cache.
 
-## Image History
+## 6. Docker Image History
 
 Practiced:
 
@@ -109,26 +132,92 @@ docker image history <image>
 
 Used image history to inspect:
 
-- Dockerfile layers
+- Image layers
 - Layer sizes
-- Commands associated with layers
+- Dockerfile instructions
 - Base image layers
+
+## 7. Multi-Stage Builds
+
+A multi-stage Dockerfile separates the build environment from the final runtime image.
+
+```text
+BUILD STAGE
+├── compiler
+├── development tools
+├── source code
+└── build dependencies
+        │
+        ↓
+      BUILD
+        │
+        ↓
+FINAL STAGE
+├── runtime
+├── application
+└── only required dependencies
+```
+
+The final image does not need to contain all the tools used during the build.
+
+### Basic Structure
+
+```dockerfile
+FROM <build-image> AS builder
+
+# Build application
+# Install build dependencies
+# Generate required output
+
+FROM <runtime-image>
+
+COPY --from=builder <build-output> <final-location>
+```
+
+### Key Concept
+
+```text
+Build stage
+     ↓
+Create required artifacts
+     ↓
+COPY --from=builder
+     ↓
+Final runtime image
+```
+
+The goal is to keep the final image smaller and free from unnecessary build tools.
+
+## Multi-Stage Practice
+
+Created a separate practice project:
+
+```text
+docker-day8-multistage/
+├── app.py
+└── Dockerfile
+```
+
+The practice application:
+
+```python
+print("Hello from a multi-stage Docker build!")
+```
 
 ## Key Learning
 
 ```text
-Dockerfile
-    ↓
-Instructions
-    ↓
-Image Layers
-    ↓
-Build Cache
-    ↓
-Unchanged layers → Reused
-Changed layer → Rebuilt
+Docker Image Optimization
+│
+├── Layer caching
+│   └── reuse unchanged layers
+│
+├── .dockerignore
+│   └── reduce build context
+│
+├── Image history
+│   └── inspect layers and sizes
+│
+└── Multi-stage builds
+    └── separate build and runtime environments
 ```
-
-The order of Dockerfile instructions affects cache efficiency.
-
-Keeping dependency installation before application source code allows Docker to reuse the dependency layer when only application code changes.
